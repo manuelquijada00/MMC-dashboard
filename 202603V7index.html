@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>MMC Colombia — Dashboard Comercial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f4f2;--white:#ffffff;--surface:#f9f9f7;
+  --border:#e3e3df;--border2:#ccccc8;
+  --text:#1a1a18;--muted:#68685e;--hint:#b0b0a8;
+  --red:#b83030;--red-bg:#fdf1f1;--red-bd:#efc8c8;
+  --amber:#9a6200;--amber-bg:#fdf6e3;--amber-bd:#f0d88a;
+  --green:#1a7048;--green-bg:#f0faf4;--green-bd:#9ad8ba;
+  --blue:#1a46a0;--blue-bg:#eef2fc;--blue-bd:#aac0ee;
+  --purple:#5535a0;--purple-bg:#f2effe;--purple-bd:#c0adee;
+  --oml:#b85010;--omh:#1a46a0;
+  --r:6px;--r-lg:10px;
+  --sh:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --sh-md:0 4px 12px rgba(0,0,0,0.09),0 2px 4px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5}
+header{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:var(--sh)}
+.logo{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.logo-badge{background:var(--text);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.06em}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.pagebar{background:var(--white);border-bottom:1px solid var(--border);padding:1rem 2rem .5rem}
+.page-title{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.page-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.tabbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;gap:0;overflow-x:auto}
+.tabbar::-webkit-scrollbar{display:none}
+.tab{font-size:12px;font-weight:500;color:var(--muted);padding:10px 16px;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+main{max-width:1360px;margin:0 auto;padding:1.75rem 2rem 4rem}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.sec{margin-bottom:2rem}
+.sec-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+@media(max-width:1200px){.g6{grid-template-columns:repeat(3,1fr)}.g5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.g2,.g3,.g4,.g5,.g6{grid-template-columns:1fr}main{padding:1rem 1rem 3rem}.pagebar,.tabbar,header{padding-left:1rem;padding-right:1rem}}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.2rem;box-shadow:var(--sh);transition:box-shadow .15s;position:relative;overflow:hidden}
+.kpi:hover{box-shadow:var(--sh-md)}
+.kpi-bar{height:3px;border-radius:var(--r-lg) var(--r-lg) 0 0;position:absolute;top:0;left:0;right:0}
+.kl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem}
+.kv{font-size:24px;font-weight:700;color:var(--text);line-height:1;letter-spacing:-.02em;margin-bottom:.3rem}
+.kv.sm{font-size:18px}
+.ks{font-size:11px;color:var(--muted)}
+.kd{display:flex;gap:6px;margin-top:.45rem;flex-wrap:wrap}
+.d{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.du{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.dd{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.dn{background:#f0f0ee;color:var(--muted);border:1px solid var(--border)}
+.dw{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.p-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.p-warn{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.p-crit{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.p-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.p-neu{background:#f0f0ee;color:var(--muted);border:1px solid var(--border)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh);overflow:hidden}
+.card-pad{padding:1.25rem}
+.card-head{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:700;color:var(--text)}
+.card-sub{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.card-accent{height:3px}
+.taps-top{background:var(--text);padding:1.5rem 1.75rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.taps-amount{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;line-height:1;letter-spacing:-.03em;font-family:'IBM Plex Mono',monospace}
+.taps-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}
+.taps-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px}
+.taps-meta{text-align:right;min-width:160px}
+.taps-meta-row{margin-bottom:10px}
+.taps-meta-val{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:rgba(255,255,255,.75)}
+.tdelta{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;margin-top:6px}
+.td-neg{background:rgba(248,113,113,.18);color:#fca5a5}
+.td-pos{background:rgba(74,222,128,.18);color:#86efac}
+.td-neu{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.taps-body{padding:1.25rem 1.5rem}
+.tt{width:100%;border-collapse:collapse}
+.tt th{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;padding:6px 10px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface)}
+.tt td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:12px}
+.tt tr:last-child td{border-bottom:none}
+.tt tbody tr:hover td{background:var(--surface)}
+.tt tfoot td{background:var(--surface);font-weight:700;font-size:12px;padding:10px}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px}
+.tr{text-align:right}.tc{text-align:center}
+.mbar{width:90px}.mbar-t{height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)}.mbar-f{height:100%;border-radius:3px}
+.rt{width:100%;border-collapse:collapse}
+.rt th{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface)}
+.rt td{padding:7px 8px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.rt tr:last-child td{border-bottom:none}
+.rt tr:hover td{background:var(--surface)}
+.rt-r{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);font-weight:500}
+.rt-p{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700}
+.p-gr{color:var(--blue)}.p-ok_{color:var(--green)}.p-wn{color:var(--amber)}.p-cr{color:var(--red)}
+.bw{width:64px}.bt{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;border:1px solid var(--border)}.bf{height:100%;border-radius:2px}
+.f-gr{background:var(--green)}.f-ok{background:var(--blue)}.f-wn{background:var(--amber)}.f-cr{background:var(--red)}
+.ctab{width:100%;border-collapse:collapse}
+.ctab th{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:8px 12px;text-align:left;background:var(--surface);border-bottom:1px solid var(--border)}
+.ctab td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.ctab tr:last-child td{border-bottom:none}
+.ctab tbody tr:hover td{background:var(--surface)}
+.cov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.cov-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.cov-grid{grid-template-columns:1fr}}
+.cov-item{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;box-shadow:var(--sh)}
+.cov-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:.6rem}
+.cov-row{display:flex;align-items:center;gap:8px;margin:5px 0}
+.cov-label{font-size:10px;color:var(--muted);min-width:32px}
+.cov-track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);position:relative}
+.cov-fill{height:100%;border-radius:3px}
+.cov-pct{font-size:10px;font-weight:700;min-width:36px;text-align:right}
+.al{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;border-radius:var(--r);margin:6px 0;border:1px solid;font-size:12px;line-height:1.5}
+.a-cr{background:var(--red-bg);border-color:var(--red-bd)}.a-wn{background:var(--amber-bg);border-color:var(--amber-bd)}.a-ok{background:var(--green-bg);border-color:var(--green-bd)}.a-bl{background:var(--blue-bg);border-color:var(--blue-bd)}
+.al strong{font-weight:600}
+.ai{font-size:13px;min-width:16px;margin-top:1px}
+.sum-row{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);margin-top:8px}
+.sum-l{color:var(--muted);font-size:11px;font-weight:500}
+.sum-v{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700}
+.info{padding:10px 14px;border-radius:var(--r);border:1px solid;font-size:12px;line-height:1.6;margin-top:12px}
+.i-red{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
+.i-green{background:var(--green-bg);border-color:var(--green-bd);color:var(--green)}
+.i-blue{background:var(--blue-bg);border-color:var(--blue-bd);color:var(--blue)}
+.i-amber{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber)}
+.ch{position:relative;width:100%}
+.prog-track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.prog-fill{height:100%;border-radius:3px}
+.months{display:flex;justify-content:space-between;font-size:9px;color:var(--hint);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
+footer{border-top:1px solid var(--border);background:var(--white);padding:1rem 2rem;display:flex;justify-content:space-between;font-size:10px;color:var(--hint);font-family:'IBM Plex Mono',monospace;flex-wrap:wrap;gap:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span>MMC Colombia</span><span class="logo-badge">KOF FEMSA</span></div>
+  <div class="hdr-right">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--hint)">DASHBOARD COMERCIAL 2026</span>
+    <span class="pill p-ok">ACT. MAR 2026</span>
+  </div>
+</header>
+
+<div class="pagebar">
+  <div class="page-title">Resultados Comerciales — Norte Antioquia</div>
+  <div class="page-sub">MMC Colombia SAS · Distribución KOF · OML (Santa Rosa de Osos) · OMH (Cisneros) · 3,018 clientes base · 12 rutas</div>
+</div>
+
+<div class="tabbar">
+  <div class="tab active" onclick="switchTab('ene')">Enero 2026</div>
+  <div class="tab" onclick="switchTab('feb')">Febrero 2026</div>
+  <div class="tab" onclick="switchTab('mar')">Marzo 2026</div>
+  <div class="tab" onclick="switchTab('acu')">Acumulado Q1 2026</div>
+  <div class="tab" onclick="switchTab('hist')">Histórico 2023–2026</div>
+</div>
+
+<main>
+<div class="tab-panel active" id="tab-ene">
+  <div class="sec"><div class="sec-label">Indicadores Clave — Enero 2026</div><div class="g6">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kl">Volumen CF</div><div class="kv">100.0%</div><div class="ks">68,612 / 68,328 CU</div><div class="kd"><span class="d dd">OML 95.7%</span><span class="d du">OMH 108.3%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">VTM Terceros</div><div class="kv">117.0%</div><div class="ks">$0.1B / $46M COP</div><div class="kd"><span class="d du">OML 126.3%</span><span class="d du">OMH 107.1%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kl">Coberturas</div><div class="kv">96.0%</div><div class="ks">14,092 / 14,691 impactos</div><div class="kd"><span class="d du">OML 100.7%</span><span class="d dd">OMH 89.2%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Juntos+</div><div class="kv">69.5%</div><div class="ks">OML 63.5% · OMH 75.4%</div><div class="kd"><span class="d dd">OML</span><span class="d du">OMH</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">Clientes Atendidos</div><div class="kv">2,800</div><div class="ks">OML 1,682 · OMH 1,138</div><div class="kd"><span class="d dn">OML 97.9%</span><span class="d dn">OMH 94.7%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--text)"></div><div class="kl">Drop Size</div><div class="kv">22.3</div><div class="ks">CU por cliente atendido</div><div class="kd"><span class="d dn">OML 23</span><span class="d dn">OMH 25</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Indicadores Operativos — Enero 2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">NOC — OML</div><div class="kv">89.0%</div><div class="ks">5,725 visitas en cliente / 6,396 tot.</div><div class="kd"><span class="d dd">423 sin visita</span><span class="d dd">ML3L56 — 0.0%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">NOC — OMH</div><div class="kv">73.0%</div><div class="ks">2,603 visitas en cliente / 3,778 tot.</div><div class="kd"><span class="d dd">486 sin visita</span><span class="d dd">ML3G91 — 58.2%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Drop PEM vs No-PEM</div><div class="kv">+60% OML</div><div class="ks">OML: PEM 32 · No-PEM 20 CU</div><div class="kd"><span class="d du">OMH: PEM 28 · No-PEM 20</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Penetración VTM Real</div><div class="kv">27.2%</div><div class="ks">Clientes con compra terceros</div><div class="kd"><span class="d dn">OML 30.4%</span><span class="d dn">OMH 24.1%</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Indicadores de Ejecución — Enero 2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Penet. VTM Real — OML</div><div class="kv">30.4%</div><div class="ks">548 de 1,801 clientes</div><div class="kd"><span class="d dn">VTM &gt;$20k: 352/449</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Penet. VTM Real — OMH</div><div class="kv">24.1%</div><div class="ks">295 de 1,223 clientes</div><div class="kd"><span class="d dn">VTM &gt;$20k: 246/346</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Eficiencia PEM — OML</div><div class="kv">+60%</div><div class="ks">PEM: 32 CU · No-PEM: 20 CU</div><div class="kd"><span class="d du">PEM: 687</span><span class="d dn">No-PEM: 1,114</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Eficiencia PEM — OMH</div><div class="kv">+40%</div><div class="ks">PEM: 28 CU · No-PEM: 20 CU</div><div class="kd"><span class="d du">PEM: 603</span><span class="d dn">No-PEM: 620</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Ingreso KOF — Modelo TAPS Enero 2026</div><div class="card">
+    <div class="taps-top"><div><div class="taps-lbl">Ingreso total reconocido · Enero 2026</div><div class="taps-amount">$368,058,031</div><div class="taps-sub">COP</div><div class="tdelta td-neu">98.4% del presupuesto</div></div><div class="taps-meta"><div class="taps-meta-row"><div class="taps-lbl">Budget mensual</div><div class="taps-meta-val">$373,935,534</div></div><div class="taps-meta-row"><div class="taps-lbl">Gap vs budget</div><div class="taps-meta-val" style="color:#fca5a5">$-5,877,503</div></div></div></div>
+    <div class="taps-body"><table class="tt"><thead><tr><th>Componente</th><th>Resultado</th><th class="tc">Factor</th><th>Progreso</th><th class="tr">Valor COP</th><th class="tr">Máximo</th></tr></thead><tbody>
+      <tr><td><div style="font-weight:600">Componente Fijo</div><div style="font-size:10px;color:var(--muted)">90% garantizado</div></td><td><span class="pill p-blue">Garantizado</span></td><td class="tc mono">90%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:90%;background:var(--blue)"></div></div></td><td class="tr mono">$302,444,399</td><td class="tr mono" style="color:var(--hint)">$302,444,399</td></tr>
+      <tr><td><div style="font-weight:600">Volumen CF <span style="color:var(--muted);font-weight:400">(50%)</span></div><div style="font-size:10px;color:var(--muted)">100.0%</div></td><td><span class="pill p-ok">100.0%</span></td><td class="tc mono">97%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:77%;background:var(--green)"></div></div></td><td class="tr mono">$35,671,637</td><td class="tr mono" style="color:var(--hint)">$46,206,783</td></tr>
+      <tr><td><div style="font-weight:600">Coberturas <span style="color:var(--muted);font-weight:400">(40%)</span></div><div style="font-size:10px;color:var(--muted)">96.0%</div></td><td><span class="pill p-warn">96.0%</span></td><td class="tc mono">70%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:54%;background:var(--blue)"></div></div></td><td class="tr mono">$20,700,639</td><td class="tr mono" style="color:var(--hint)">$38,444,044</td></tr>
+      <tr><td><div style="font-weight:600">VTM Terceros <span style="color:var(--muted);font-weight:400">(10%)</span></div><div style="font-size:10px;color:var(--muted)">117.0%</div></td><td><span class="pill p-ok">117.0%</span></td><td class="tc mono">125%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:100%;background:var(--green)"></div></div></td><td class="tr mono">$9,241,357</td><td class="tr mono" style="color:var(--hint)">$9,241,357</td></tr>
+    </tbody><tfoot><tr><td colspan="4">TOTAL INGRESO ENERO 2026</td><td class="tr" style="font-size:14px;font-family:'IBM Plex Mono',monospace">$368,058,031</td><td class="tr mono" style="color:var(--hint)">$387,464,880</td></tr></tfoot></table></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Coberturas por Marca — Enero 2026</div><div class="cov-grid">
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Coca-Cola Original</div><span class="pill p-ok">OML 108% · OMH 100%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:74%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">74%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:65%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">65%</span></div></div>
+      <div class="cov-item" style="border-color:var(--amber-bd);background:var(--amber-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Coca-Cola Sin Azúcar</div><span class="pill p-ok">OML 102% · OMH 75%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:75%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">75%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:35%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">35%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Sabores</div><span class="pill p-ok">OML 105% · OMH 92%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:77%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">77%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:62%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">62%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Jugos Del Valle</div><span class="pill p-ok">OML 114% · OMH 92%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:86%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">86%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:68%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">68%</span></div></div>
+      <div class="cov-item" style="border-color:var(--amber-bd);background:var(--amber-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Aguas (Brisa/Manantial)</div><span class="pill p-warn">OML 84% · OMH 76%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:57%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">57%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:48%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">48%</span></div></div>
+      <div class="cov-item" style="border-color:var(--red-bd);background:var(--red-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Monster Energy</div><span class="pill p-crit">OML 48% · OMH 25%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:18%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">18%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:6%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">6%</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Detalle por Ruta — Enero 2026</div><div class="g2">
+    <div class="card"><div class="card-accent" style="background:var(--oml)"></div><div class="card-head"><div><div class="card-title">OML — Santa Rosa de Osos</div><div class="card-sub">7 rutas · 1,682 clientes · NOC 89.0%</div></div><span class="pill p-warn">95.7% vol</span></div><div class="card-pad"><table class="rt"><thead><tr><th>Ruta</th><th>Vol CF</th><th>Barra</th><th>VTM</th><th>Cob.</th><th>Juntos+</th></tr></thead><tbody><tr><td class="rt-r">ML3L50</td><td class="rt-p p-wn">~80%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:67%"></div></div></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-crit">bajo</span></td></tr>
+<tr><td class="rt-r">ML3L51</td><td class="rt-p p-gr">~103%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:86%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">medio</span></td></tr>
+<tr><td class="rt-r">ML3L52</td><td class="rt-p p-ok">~97%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:81%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">medio</span></td></tr>
+<tr><td class="rt-r">ML3L53</td><td class="rt-p p-ok">~96%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:80%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">medio</span></td></tr>
+<tr><td class="rt-r">ML3L54</td><td class="rt-p p-wn">~93%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:78%"></div></div></td><td><span class="pill p-ok">medio</span></td><td><span class="pill p-warn">medio</span></td><td><span class="pill p-warn">medio</span></td></tr>
+<tr><td class="rt-r">ML3L55</td><td class="rt-p p-wn">~94%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:78%"></div></div></td><td><span class="pill p-ok">medio</span></td><td><span class="pill p-warn">medio</span></td><td><span class="pill p-warn">medio</span></td></tr>
+<tr><td class="rt-r">ML3L56</td><td class="rt-p p-ok">~96%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:80%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">medio</span></td></tr></tbody></table><div class="sum-row"><span class="sum-l">Drop 23 CU/cli · PEM 32 vs No-PEM 20</span><span class="sum-v" style="color:var(--oml)">$0.0B VTM</span></div></div></div>
+    <div class="card"><div class="card-accent" style="background:var(--omh)"></div><div class="card-head"><div><div class="card-title">OMH — Cisneros</div><div class="card-sub">5 rutas · 1,138 clientes · NOC 73.0%</div></div><span class="pill p-ok">108.3% vol</span></div><div class="card-pad"><table class="rt"><thead><tr><th>Ruta</th><th>Vol CF</th><th>Barra</th><th>VTM</th><th>Cob.</th><th>Juntos+</th></tr></thead><tbody><tr><td class="rt-r">ML3G70</td><td class="rt-p p-cr">~73%</td><td class="bw"><div class="bt"><div class="bf f-cr" style="width:61%"></div></div></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-crit">0%</span></td></tr>
+<tr><td class="rt-r">ML3G90</td><td class="rt-p p-gr">~109%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:91%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">ok</span></td></tr>
+<tr><td class="rt-r">ML3G91</td><td class="rt-p p-gr">~112%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:93%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">ok</span></td></tr>
+<tr><td class="rt-r">ML3G92</td><td class="rt-p p-gr">~108%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:90%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">med</span></td><td><span class="pill p-warn">med</span></td></tr>
+<tr><td class="rt-r">ML3G93</td><td class="rt-p p-gr">~110%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:92%"></div></div></td><td><span class="pill p-ok">ok</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">ok</span></td></tr></tbody></table><div class="sum-row"><span class="sum-l">Drop 25 CU/cli · PEM 28 vs No-PEM 20</span><span class="sum-v" style="color:var(--omh)">$0.0B VTM</span></div></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Alertas y Destacados — Enero 2026</div><div class="g2"><div><div class="al a-cr"><span class="ai">⚠</span><span><strong>ML3G70 (Cisneros):</strong> Volumen ~73% · 0 visitas · 0% Juntos+. Ruta sin operación efectiva. Alerta de personal/territorio.</span></div><div class="al a-cr"><span class="ai">⚠</span><span><strong>ML3L50 (Santa Rosa):</strong> Volumen ~80% · 0 Juntos+ · 0% VTM. Sin actividad comercial registrada.</span></div><div class="al a-wn"><span class="ai">◉</span><span><strong>Monster OMH:</strong> Solo 6% cobertura real (cumpl. 25%). Menor cobertura de todo el portafolio en Q1.</span></div><div class="al a-wn"><span class="ai">◉</span><span><strong>NOC OMH 73%:</strong> ML3G91 al 58.2% — 486 clientes sin visita en cliente. Eficiencia de ruta crítica.</span></div></div><div><div class="al a-ok"><span class="ai">★</span><span><strong>OMH Volumen:</strong> 108.3% vs cuota — ML3G91 +112%, ML3G92 +108%, ML3G93 +110%. Tres rutas sobre 108%.</span></div><div class="al a-ok"><span class="ai">★</span><span><strong>VTM OML:</strong> 126.3% vs cuota — $30.3B COP. Mejor desempeño VTM del Q1 para OML.</span></div><div class="al a-bl"><span class="ai">ℹ</span><span><strong>Aguas OML:</strong> 84% cumplimiento coberturas — único producto bajo objetivo en OML. Potencial no capturado en tiendas de barrio.</span></div><div class="al a-bl"><span class="ai">ℹ</span><span><strong>Juntos+ OMH:</strong> ML3G90 al 97% de objetivo. Base sólida para llegar a 100% en febrero.</span></div></div></div></div>
+  <div class="sec"><div class="sec-label">Análisis Profundo — Enero 2026</div>
+    <div class="g2">
+      <div class="card"><div class="card-accent" style="background:var(--blue)"></div><div class="card-head"><div class="card-title">Refrigeración y Activo Frío</div><div class="card-sub">Neveras · PEM · Cobertura Frío GEC</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Neveras instaladas</td><td class="tr mono">732</td><td class="tr mono">661</td></tr>
+        <tr><td>Clientes PEM activos</td><td class="tr mono">668</td><td class="tr mono">592</td></tr>
+        <tr><td>% Cobertura frío total</td><td class="tr mono">38%</td><td class="tr mono">48%</td></tr>
+        <tr><td>Neveras improductivas</td><td class="tr mono" style="color:var(--red)">36</td><td class="tr mono" style="color:var(--red)">33</td></tr>
+        <tr><td>Neveras productivas (imp&gt;80%)</td><td class="tr mono" style="color:var(--green)">66</td><td class="tr mono" style="color:var(--green)">137</td></tr>
+        <tr><td>Potencial nuevas neveras</td><td class="tr mono" style="color:var(--blue)">231</td><td class="tr mono" style="color:var(--blue)">144</td></tr>
+        <tr><td>🥇 Frío Oro</td><td class="tr mono">61%</td><td class="tr mono">65%</td></tr>
+        <tr><td>🥈 Frío Plata</td><td class="tr mono">51%</td><td class="tr mono">65%</td></tr>
+        <tr><td>🥉 Frío Bronce</td><td class="tr mono">30%</td><td class="tr mono">42%</td></tr>
+      </tbody></table></div></div>
+      <div class="card"><div class="card-accent" style="background:var(--amber)"></div><div class="card-head"><div class="card-title">Coberturas GEC + Mix Categorías</div><div class="card-sub">Oro · Plata · Bronce · Carbonatos · Aguas</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>🥇 GEC Oro</td><td class="tr mono">63%</td><td class="tr mono">65%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">92/58</td><td class="tr mono" style="font-size:10px">59/38</td></tr>
+        <tr><td>🥈 GEC Plata</td><td class="tr mono">71%</td><td class="tr mono">58%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">448/316</td><td class="tr mono" style="font-size:10px">276/160</td></tr>
+        <tr><td>🥉 GEC Bronce</td><td class="tr mono">83%</td><td class="tr mono">75%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">1,195/989</td><td class="tr mono" style="font-size:10px">895/729</td></tr>
+        <tr><td>🔴 Carbonatos</td><td class="tr mono">74.5%</td><td class="tr mono">72.4%</td></tr>
+        <tr><td>💧 Aguas</td><td class="tr mono">14.8%</td><td class="tr mono">19.8%</td></tr>
+        <tr><td>🍊 Jugos</td><td class="tr mono">8.7%</td><td class="tr mono">5.8%</td></tr>
+        <tr><td>⚡ Energizantes</td><td class="tr mono">1.2%</td><td class="tr mono">1.6%</td></tr>
+      </tbody></table></div></div>
+    </div>
+    <div class="g2" style="margin-top:14px">
+      <div class="card"><div class="card-accent" style="background:var(--purple)"></div><div class="card-head"><div class="card-title">Fidelización Juntos+</div><div class="card-sub">Cumplimiento · Cobertura real · Rutas</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Base elegibles</td><td class="tr mono">1,801</td><td class="tr mono">1,223</td></tr>
+        <tr><td>Objetivo</td><td class="tr mono">1,215</td><td class="tr mono">968</td></tr>
+        <tr><td>Clientes activos</td><td class="tr mono">772</td><td class="tr mono">730</td></tr>
+        <tr><td>% Cumpl. vs objetivo</td><td class="tr mono" style="color:var(--amber);font-weight:700">63.5%</td><td class="tr mono" style="color:var(--amber);font-weight:700">75.4%</td></tr>
+        <tr><td>% Cobertura real/base</td><td class="tr mono">42.9%</td><td class="tr mono">59.7%</td></tr>
+        <tr><td>Mejor ruta</td><td class="tr" style="font-size:10px;color:var(--green)">ML3L53 — 75.3%</td><td class="tr" style="font-size:10px;color:var(--green)">ML3G90 — 97.0%</td></tr>
+        <tr><td>Peor ruta</td><td class="tr" style="font-size:10px;color:var(--red)">ML3L50 — 0.0%</td><td class="tr" style="font-size:10px;color:var(--red)">ML3G92 — 35.9%</td></tr>
+      </tbody></table></div></div>
+      <div class="card"><div class="card-accent" style="background:var(--green)"></div><div class="card-head"><div class="card-title">Mix Presentación y MPCKS</div><div class="card-sub">Tamaños · Multiempaques por minimercado</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Presentación</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Personal</td><td class="tr mono">50.9%</td><td class="tr mono">53.8%</td></tr>
+        <tr><td>Familiar</td><td class="tr mono">20.7%</td><td class="tr mono">20.2%</td></tr>
+        <tr><td>Minipersonal</td><td class="tr mono">16.2%</td><td class="tr mono">12.1%</td></tr>
+        <tr><td>MegaFamiliar</td><td class="tr mono">12.2%</td><td class="tr mono">13.8%</td></tr>
+      </tbody></table>
+      <div style="margin-top:10px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">MPCKS — Minimercados</div>
+      <table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Minimercados en jefatura</td><td class="tr mono">163</td><td class="tr mono">85</td></tr>
+        <tr><td>Venta MPCKS (CU)</td><td class="tr mono">667</td><td class="tr mono">223</td></tr>
+        <tr><td>Promedio MPCKS/minimercado</td><td class="tr mono" style="font-weight:700">4.1</td><td class="tr mono" style="font-weight:700">2.6</td></tr>
+        <tr><td>Mejor ruta</td><td class="tr" style="font-size:10px;color:var(--green)">ML3L52 — 6.5</td><td class="tr" style="font-size:10px;color:var(--green)">ML3G93 — 3.8</td></tr>
+      </tbody></table></div></div>
+    </div>
+  </div>
+</div><div class="tab-panel" id="tab-feb">
+  <div class="sec"><div class="sec-label">Indicadores Clave — Febrero 2026</div><div class="g6">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kl">Volumen CF</div><div class="kv">92.1%</div><div class="ks">56,023 / 60,826 CU</div><div class="kd"><span class="d dd">OML 91.8%</span><span class="d dd">OMH 92.5%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">VTM Terceros</div><div class="kv">100.3%</div><div class="ks">$0.0B / $46M COP</div><div class="kd"><span class="d du">OML 120.2%</span><span class="d dd">OMH 78.6%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kl">Coberturas</div><div class="kv">114.4%</div><div class="ks">13,679 / 11,952 impactos</div><div class="kd"><span class="d du">OML 101.5%</span><span class="d du">OMH 147.2%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Juntos+</div><div class="kv">52.2%</div><div class="ks">OML 45.3% · OMH 59.2%</div><div class="kd"><span class="d dd">OML</span><span class="d dw">OMH</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">Clientes Atendidos</div><div class="kv">2,744</div><div class="ks">OML 1,674 · OMH 1,070</div><div class="kd"><span class="d dn">OML 97.4%</span><span class="d dn">OMH 89.0%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--text)"></div><div class="kl">Drop Size</div><div class="kv">20.4</div><div class="ks">CU por cliente atendido</div><div class="kd"><span class="d dn">OML 20</span><span class="d dn">OMH 21</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Indicadores Operativos — Febrero 2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">NOC — OML</div><div class="kv">88.7%</div><div class="ks">6,074 visitas en cliente / 6,845 tot.</div><div class="kd"><span class="d dd">421 sin visita</span><span class="d dd">ML3L54 — 80.9%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">NOC — OMH</div><div class="kv">78.6%</div><div class="ks">3,200 visitas en cliente / 4,070 tot.</div><div class="kd"><span class="d dd">402 sin visita</span><span class="d dd">ML3G92 — 51.3%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Drop PEM vs No-PEM</div><div class="kv">+69% OML</div><div class="ks">OML: PEM 27 · No-PEM 16 CU</div><div class="kd"><span class="d du">OMH: PEM 25 · No-PEM 17</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Penetración VTM Real</div><div class="kv">27.4%</div><div class="ks">Clientes con compra terceros</div><div class="kd"><span class="d dn">OML 33.5%</span><span class="d dn">OMH 21.2%</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Indicadores de Ejecución — Febrero 2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Penet. VTM Real — OML</div><div class="kv">33.5%</div><div class="ks">600 de 1,795 clientes</div><div class="kd"><span class="d dn">VTM &gt;$20k: 267/278</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Penet. VTM Real — OMH</div><div class="kv">21.2%</div><div class="ks">259 de 1,223 clientes</div><div class="kd"><span class="d dn">VTM &gt;$20k: 251/205</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Eficiencia PEM — OML</div><div class="kv">+69%</div><div class="ks">PEM: 27 CU · No-PEM: 16 CU</div><div class="kd"><span class="d du">PEM: 686</span><span class="d dn">No-PEM: 1,107</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Eficiencia PEM — OMH</div><div class="kv">+47%</div><div class="ks">PEM: 25 CU · No-PEM: 17 CU</div><div class="kd"><span class="d du">PEM: 603</span><span class="d dn">No-PEM: 620</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Ingreso KOF — Modelo TAPS Febrero 2026</div><div class="card">
+    <div class="taps-top"><div><div class="taps-lbl">Ingreso total reconocido · Febrero 2026</div><div class="taps-amount">$362,808,940</div><div class="taps-sub">COP</div><div class="tdelta td-neg">▼ $5,249,091 vs Enero</div></div><div class="taps-meta"><div class="taps-meta-row"><div class="taps-lbl">Enero 2026</div><div class="taps-meta-val">$368,058,031</div></div><div class="taps-meta-row"><div class="taps-lbl">Budget mensual</div><div class="taps-meta-val">$373,935,534</div></div><div class="taps-meta-row"><div class="taps-lbl">vs Budget</div><div class="taps-meta-val" style="color:#fca5a5">$-11,126,594</div></div></div></div>
+    <div class="taps-body"><table class="tt"><thead><tr><th>Componente</th><th>Resultado</th><th class="tc">Factor</th><th>Progreso</th><th class="tr">Valor COP</th><th class="tr">Máximo</th></tr></thead><tbody>
+      <tr><td><div style="font-weight:600">Componente Fijo</div><div style="font-size:10px;color:var(--muted)">90% garantizado</div></td><td><span class="pill p-blue">Garantizado</span></td><td class="tc mono">90%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:90%;background:var(--blue)"></div></div></td><td class="tr mono">$302,444,399</td><td class="tr mono" style="color:var(--hint)">$302,444,399</td></tr>
+      <tr><td><div style="font-weight:600">Volumen CF <span style="color:var(--muted);font-weight:400">(50%)</span></div><div style="font-size:10px;color:var(--muted)">92.1%</div></td><td><span class="pill p-warn">92.1%</span></td><td class="tc mono">40%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:32%;background:var(--amber)"></div></div></td><td class="tr mono">$14,786,171</td><td class="tr mono" style="color:var(--hint)">$46,206,783</td></tr>
+      <tr><td><div style="font-weight:600">Coberturas <span style="color:var(--muted);font-weight:400">(40%)</span></div><div style="font-size:10px;color:var(--muted)">114.4%</div></td><td><span class="pill p-ok">114.4%</span></td><td class="tc mono">130%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:100%;background:var(--green)"></div></div></td><td class="tr mono">$38,444,044</td><td class="tr mono" style="color:var(--hint)">$38,444,044</td></tr>
+      <tr><td><div style="font-weight:600">VTM Terceros <span style="color:var(--muted);font-weight:400">(10%)</span></div><div style="font-size:10px;color:var(--muted)">100.3%</div></td><td><span class="pill p-ok">100.3%</span></td><td class="tc mono">97%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:77%;background:var(--green)"></div></div></td><td class="tr mono">$7,134,327</td><td class="tr mono" style="color:var(--hint)">$9,241,357</td></tr>
+    </tbody><tfoot><tr><td colspan="4">TOTAL INGRESO FEBRERO 2026</td><td class="tr" style="font-size:14px;font-family:'IBM Plex Mono',monospace">$362,808,940</td><td class="tr mono" style="color:var(--hint)">$387,464,880</td></tr></tfoot></table></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Coberturas por Marca — Febrero 2026</div><div class="cov-grid">
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Coca-Cola Original</div><span class="pill p-ok">OML 108% · OMH 166%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:77%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">77%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:64%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">64%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Coca-Cola Sin Azúcar</div><span class="pill p-ok">OML 110% · OMH 111%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:78%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">78%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:40%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">40%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Sabores</div><span class="pill p-ok">OML 108% · OMH 156%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:80%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">80%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:62%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">62%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Jugos Del Valle</div><span class="pill p-ok">OML 112% · OMH 154%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:86%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">86%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:67%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">67%</span></div></div>
+      <div class="cov-item" style="border-color:var(--amber-bd);background:var(--amber-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Aguas (Brisa/Manantial)</div><span class="pill p-warn">OML 83% · OMH 123%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:62%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">62%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:51%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">51%</span></div></div>
+      <div class="cov-item" style="border-color:var(--red-bd);background:var(--red-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Monster Energy</div><span class="pill p-crit">OML 76% · OMH 33%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:40%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">40%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:12%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">12%</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Detalle por Ruta — Febrero 2026</div><div class="g2">
+    <div class="card"><div class="card-accent" style="background:var(--oml)"></div><div class="card-head"><div><div class="card-title">OML — Santa Rosa de Osos</div><div class="card-sub">7 rutas · 1,674 clientes · NOC 88.7%</div></div><span class="pill p-warn">91.8% vol</span></div><div class="card-pad"><table class="rt"><thead><tr><th>Ruta</th><th>Vol CF</th><th>Barra</th><th>VTM</th><th>Cob.</th><th>Juntos+</th></tr></thead><tbody><tr><td class="rt-r">ML3L50</td><td class="rt-p p-cr">66.3%</td><td class="bw"><div class="bt"><div class="bf f-cr" style="width:55%"></div></div></td><td><span class="pill p-warn">0%</span></td><td><span class="pill p-neu">0%</span></td><td><span class="pill p-crit">0%</span></td></tr>
+<tr><td class="rt-r">ML3L51</td><td class="rt-p p-gr">103.2%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:86%"></div></div></td><td><span class="pill p-ok">118.9%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-crit">30.3%</span></td></tr>
+<tr><td class="rt-r">ML3L52</td><td class="rt-p p-ok">95.5%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:80%"></div></div></td><td><span class="pill p-ok">112.8%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">45.6%</span></td></tr>
+<tr><td class="rt-r">ML3L53</td><td class="rt-p p-wn">94.3%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:79%"></div></div></td><td><span class="pill p-ok">106.1%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-crit">38.9%</span></td></tr>
+<tr><td class="rt-r">ML3L54</td><td class="rt-p p-wn">94.7%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:79%"></div></div></td><td><span class="pill p-ok">102.4%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">56.2%</span></td></tr>
+<tr><td class="rt-r">ML3L55</td><td class="rt-p p-cr">78.3%</td><td class="bw"><div class="bt"><div class="bf f-cr" style="width:65%"></div></div></td><td><span class="pill p-ok">106.1%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">56.2%</span></td></tr>
+<tr><td class="rt-r">ML3L56</td><td class="rt-p p-wn">89.1%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:74%"></div></div></td><td><span class="pill p-ok">174.8%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-crit">0%</span></td></tr></tbody></table><div class="sum-row"><span class="sum-l">Drop 20 CU/cli · PEM 27 vs No-PEM 16</span><span class="sum-v" style="color:var(--oml)">$0.0B VTM</span></div></div></div>
+    <div class="card"><div class="card-accent" style="background:var(--omh)"></div><div class="card-head"><div><div class="card-title">OMH — Cisneros</div><div class="card-sub">5 rutas · 1,070 clientes · NOC 78.6%</div></div><span class="pill p-warn">92.5% vol</span></div><div class="card-pad"><table class="rt"><thead><tr><th>Ruta</th><th>Vol CF</th><th>Barra</th><th>VTM</th><th>Cob.</th><th>Juntos+</th></tr></thead><tbody><tr><td class="rt-r">ML3G70</td><td class="rt-p p-wn">95.4%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:80%"></div></div></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-crit">0%</span></td></tr>
+<tr><td class="rt-r">ML3G90</td><td class="rt-p p-wn">92.3%</td><td class="bw"><div class="bt"><div class="bf f-wn" style="width:77%"></div></div></td><td><span class="pill p-warn">59.5%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-ok">71.2%</span></td></tr>
+<tr><td class="rt-r">ML3G91</td><td class="rt-p p-ok">98.0%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:82%"></div></div></td><td><span class="pill p-ok">103.4%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-warn">55.0%</span></td></tr>
+<tr><td class="rt-r">ML3G92</td><td class="rt-p p-cr">82.3%</td><td class="bw"><div class="bt"><div class="bf f-cr" style="width:69%"></div></div></td><td><span class="pill p-warn">51.2%</span></td><td><span class="pill p-warn">warn</span></td><td><span class="pill p-crit">33.3%</span></td></tr>
+<tr><td class="rt-r">ML3G93</td><td class="rt-p p-gr">100.2%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:84%"></div></div></td><td><span class="pill p-warn">99.1%</span></td><td><span class="pill p-warn">ok</span></td><td><span class="pill p-ok">82.6%</span></td></tr></tbody></table><div class="sum-row"><span class="sum-l">Drop 21 CU/cli · PEM 25 vs No-PEM 17</span><span class="sum-v" style="color:var(--omh)">$0.0B VTM</span></div></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Alertas y Destacados — Febrero 2026</div><div class="g2"><div><div class="al a-cr"><span class="ai">⚠</span><span><strong>ML3G92 (Cisneros):</strong> Colapso multidimensional — Vol 82.3% · VTM 51.2% · NOC 51.3% · Juntos+ 33.3%. Revisión urgente de personal y territorio.</span></div><div class="al a-cr"><span class="ai">⚠</span><span><strong>ML3L50 (Santa Rosa):</strong> 0 visitas · 0 Juntos+ · Vol 66.3%. Sin actividad real. Decisión de reasignación pendiente.</span></div><div class="al a-wn"><span class="ai">◉</span><span><strong>ML3L55:</strong> Volumen 78.3% con NOC del 92%. Alta actividad pero bajo cierre. Revisar capacitación en negociación y mix.</span></div><div class="al a-wn"><span class="ai">◉</span><span><strong>Monster OMH:</strong> 12% cobertura real vs 36% objetivo. 3 impactos de 25 posibles. Acción inmediata en exhibición y activación.</span></div></div><div><div class="al a-ok"><span class="ai">★</span><span><strong>ML3L56 VTM:</strong> $6.99B COP = 174.8% de cuota terceros. Mejor ruta del período. Analizar qué prácticas replicar.</span></div><div class="al a-ok"><span class="ai">★</span><span><strong>Coberturas OMH:</strong> 147.2% — superó tope TAPS. Coberturas generaron $38.4M del ingreso variable, el mayor componente del mes.</span></div><div class="al a-bl"><span class="ai">ℹ</span><span><strong>Aguas (OML):</strong> Único producto bajo objetivo en OML (83%). Potencial no capturado especialmente en canal tiendas.</span></div><div class="al a-bl"><span class="ai">ℹ</span><span><strong>Juntos+ en caída:</strong> ▼18pp vs enero en ambas jefaturas. ML3L50 y ML3L56 con 0%. El programa necesita activación urgente.</span></div></div></div></div>
+  <div class="sec"><div class="sec-label">Análisis Profundo — Febrero 2026</div>
+    <div class="g2">
+      <div class="card"><div class="card-accent" style="background:var(--blue)"></div><div class="card-head"><div class="card-title">Refrigeración y Activo Frío</div><div class="card-sub">Neveras · PEM · Cobertura Frío GEC</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Neveras instaladas</td><td class="tr mono">740</td><td class="tr mono">661</td></tr>
+        <tr><td>Clientes PEM activos</td><td class="tr mono">672</td><td class="tr mono">592</td></tr>
+        <tr><td>% Cobertura frío total</td><td class="tr mono">38%</td><td class="tr mono">48%</td></tr>
+        <tr><td>Neveras improductivas</td><td class="tr mono" style="color:var(--red)">21</td><td class="tr mono" style="color:var(--red)">68</td></tr>
+        <tr><td>Neveras productivas (imp&gt;80%)</td><td class="tr mono" style="color:var(--green)">128</td><td class="tr mono" style="color:var(--green)">140</td></tr>
+        <tr><td>Potencial nuevas neveras</td><td class="tr mono" style="color:var(--blue)">172</td><td class="tr mono" style="color:var(--blue)">123</td></tr>
+        <tr><td>🥇 Frío Oro</td><td class="tr mono">61%</td><td class="tr mono">67%</td></tr>
+        <tr><td>🥈 Frío Plata</td><td class="tr mono">57%</td><td class="tr mono">62%</td></tr>
+        <tr><td>🥉 Frío Bronce</td><td class="tr mono">28%</td><td class="tr mono">41%</td></tr>
+      </tbody></table></div></div>
+      <div class="card"><div class="card-accent" style="background:var(--amber)"></div><div class="card-head"><div class="card-title">Coberturas GEC + Mix Categorías</div><div class="card-sub">Oro · Plata · Bronce · Carbonatos · Aguas</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>🥇 GEC Oro</td><td class="tr mono">65%</td><td class="tr mono">56%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">762/491</td><td class="tr mono" style="font-size:10px">215/142</td></tr>
+        <tr><td>🥈 GEC Plata</td><td class="tr mono">70%</td><td class="tr mono">48%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">3,624/2,555</td><td class="tr mono" style="font-size:10px">3,215/1,332</td></tr>
+        <tr><td>🥉 GEC Bronce</td><td class="tr mono">76%</td><td class="tr mono">59%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">4,273/3,230</td><td class="tr mono" style="font-size:10px">2,511/1,559</td></tr>
+        <tr><td>🔴 Carbonatos</td><td class="tr mono">72.2%</td><td class="tr mono">68.9%</td></tr>
+        <tr><td>💧 Aguas</td><td class="tr mono">15.2%</td><td class="tr mono">22.8%</td></tr>
+        <tr><td>🍊 Jugos</td><td class="tr mono">10.0%</td><td class="tr mono">6.3%</td></tr>
+        <tr><td>⚡ Energizantes</td><td class="tr mono">1.7%</td><td class="tr mono">1.4%</td></tr>
+      </tbody></table></div></div>
+    </div>
+    <div class="g2" style="margin-top:14px">
+      <div class="card"><div class="card-accent" style="background:var(--purple)"></div><div class="card-head"><div class="card-title">Fidelización Juntos+</div><div class="card-sub">Cumplimiento · Cobertura real · Rutas</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Base elegibles</td><td class="tr mono">1,795</td><td class="tr mono">1,223</td></tr>
+        <tr><td>Objetivo</td><td class="tr mono">1,029</td><td class="tr mono">946</td></tr>
+        <tr><td>Clientes activos</td><td class="tr mono">466</td><td class="tr mono">560</td></tr>
+        <tr><td>% Cumpl. vs objetivo</td><td class="tr mono" style="color:var(--red);font-weight:700">45.3%</td><td class="tr mono" style="color:var(--red);font-weight:700">59.2%</td></tr>
+        <tr><td>% Cobertura real/base</td><td class="tr mono">26.0%</td><td class="tr mono">45.7%</td></tr>
+        <tr><td>Mejor ruta</td><td class="tr" style="font-size:10px;color:var(--green)">ML3L54/55 — 56.2%</td><td class="tr" style="font-size:10px;color:var(--green)">ML3G93 — 82.6%</td></tr>
+        <tr><td>Peor ruta</td><td class="tr" style="font-size:10px;color:var(--red)">ML3L51 — 30.3%</td><td class="tr" style="font-size:10px;color:var(--red)">ML3G92 — 33.3%</td></tr>
+      </tbody></table></div></div>
+      <div class="card"><div class="card-accent" style="background:var(--green)"></div><div class="card-head"><div class="card-title">Mix Presentación y MPCKS</div><div class="card-sub">Tamaños · Multiempaques por minimercado</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Presentación</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Personal</td><td class="tr mono">52.5%</td><td class="tr mono">54.3%</td></tr>
+        <tr><td>Familiar</td><td class="tr mono">18.8%</td><td class="tr mono">21.0%</td></tr>
+        <tr><td>Minipersonal</td><td class="tr mono">17.8%</td><td class="tr mono">13.0%</td></tr>
+        <tr><td>MegaFamiliar</td><td class="tr mono">10.9%</td><td class="tr mono">11.7%</td></tr>
+      </tbody></table>
+      <div style="margin-top:10px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">MPCKS — Minimercados</div>
+      <table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Minimercados en jefatura</td><td class="tr mono">163</td><td class="tr mono">84</td></tr>
+        <tr><td>Venta MPCKS (CU)</td><td class="tr mono">621</td><td class="tr mono">158</td></tr>
+        <tr><td>Promedio MPCKS/minimercado</td><td class="tr mono" style="font-weight:700">3.8</td><td class="tr mono" style="font-weight:700">1.9</td></tr>
+        <tr><td>Mejor ruta</td><td class="tr" style="font-size:10px;color:var(--green)">ML3L53 — 6.5</td><td class="tr" style="font-size:10px;color:var(--green)">ML3G91 — 2.7</td></tr>
+      </tbody></table></div></div>
+    </div>
+  </div>
+</div><div class="tab-panel" id="tab-mar">
+  <div class="sec"><div class="sec-label">Indicadores Clave — Marzo 2026</div><div class="g6">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kl">Volumen CF</div><div class="kv">113.7%</div><div class="ks">72,657 / 63,908 CU</div><div class="kd"><span class="d du">OML 107.4%</span><span class="d du">OMH 123.8%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">VTM Terceros</div><div class="kv">109.3%</div><div class="ks">$0.1B / $46M COP</div><div class="kd"><span class="d du">OML 107.5%</span><span class="d du">OMH 112.2%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kl">Coberturas</div><div class="kv">100.1%</div><div class="ks">14,349 / 14,332 impactos</div><div class="kd"><span class="d dd">OML 97.9%</span><span class="d du">OMH 103.5%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Juntos+</div><div class="kv">83.3%</div><div class="ks">OML 67.0% · OMH 99.7%</div><div class="kd"><span class="d dd">OML</span><span class="d du">OMH</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">Clientes Atendidos</div><div class="kv">2,847</div><div class="ks">OML 1,670 · OMH 1,177</div><div class="kd"><span class="d dn">OML 98.2%</span><span class="d dn">OMH 108.5%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--text)"></div><div class="kl">Drop Size</div><div class="kv">25.5</div><div class="ks">CU por cliente atendido</div><div class="kd"><span class="d dn">OML 25</span><span class="d dn">OMH 25</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Indicadores Operativos — Marzo 2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">NOC — OML</div><div class="kv">80.9%</div><div class="ks">6,334 visitas en cliente / 7,825 tot.</div><div class="kd"><span class="d dd">654 sin visita</span><span class="d dd">ML3L56 — 0.0%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">NOC — OMH</div><div class="kv">79.7%</div><div class="ks">3,974 visitas en cliente / 4,986 tot.</div><div class="kd"><span class="d dd">531 sin visita</span><span class="d dd">ML3G92 — 67.6%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Drop PEM vs No-PEM</div><div class="kv">+70% OML</div><div class="ks">OML: PEM 34 · No-PEM 20 CU</div><div class="kd"><span class="d du">OMH: PEM 29 · No-PEM 22</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Penetración VTM Real</div><div class="kv">33.7%</div><div class="ks">Clientes con compra terceros</div><div class="kd"><span class="d dn">OML 41.5%</span><span class="d dn">OMH 25.9%</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Indicadores de Ejecución — Marzo 2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Penet. VTM Real — OML</div><div class="kv">41.5%</div><div class="ks">739 de 1,781 clientes</div><div class="kd"><span class="d dn">VTM &gt;$20k: 356/448</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kl">Penet. VTM Real — OMH</div><div class="kv">25.9%</div><div class="ks">315 de 1,214 clientes</div><div class="kd"><span class="d dn">VTM &gt;$20k: 256/231</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Eficiencia PEM — OML</div><div class="kv">+70%</div><div class="ks">PEM: 34 CU · No-PEM: 20 CU</div><div class="kd"><span class="d du">PEM: 696</span><span class="d dn">No-PEM: 1,087</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Eficiencia PEM — OMH</div><div class="kv">+32%</div><div class="ks">PEM: 29 CU · No-PEM: 22 CU</div><div class="kd"><span class="d du">PEM: 589</span><span class="d dn">No-PEM: 634</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Ingreso KOF — Modelo TAPS Marzo 2026</div><div class="card">
+    <div class="taps-top"><div><div class="taps-lbl">Ingreso total reconocido · Marzo 2026</div><div class="taps-amount">$386,281,986</div><div class="taps-sub">COP</div><div class="tdelta td-pos">▲ $23,473,046 vs Febrero</div></div><div class="taps-meta"><div class="taps-meta-row"><div class="taps-lbl">Febrero 2026</div><div class="taps-meta-val">$362,808,940</div></div><div class="taps-meta-row"><div class="taps-lbl">Budget mensual</div><div class="taps-meta-val">$373,935,534</div></div><div class="taps-meta-row"><div class="taps-lbl">vs Budget</div><div class="taps-meta-val" style="color:#86efac">+$12,346,452</div></div></div></div>
+    <div class="taps-body"><table class="tt"><thead><tr><th>Componente</th><th>Resultado</th><th class="tc">Factor</th><th>Progreso</th><th class="tr">Valor COP</th><th class="tr">Máximo</th></tr></thead><tbody>
+      <tr><td><div style="font-weight:600">Componente Fijo</div><div style="font-size:10px;color:var(--muted)">90% garantizado</div></td><td><span class="pill p-blue">Garantizado</span></td><td class="tc mono">90%</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:90%;background:var(--blue)"></div></div></td><td class="tr mono">$302,444,399</td><td class="tr mono" style="color:var(--hint)">$302,444,399</td></tr>
+      <tr><td><div style="font-weight:600">Volumen CF <span style="color:var(--muted);font-weight:400">(50%)</span></div><div style="font-size:10px;color:var(--muted)">113.7%</div></td><td><span class="pill p-ok">113.7%</span></td><td class="tc mono">1.13x</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:98%;background:var(--green)"></div></div></td><td class="tr mono">$45,467,475</td><td class="tr mono" style="color:var(--hint)">$46,206,783</td></tr>
+      <tr><td><div style="font-weight:600">Coberturas <span style="color:var(--muted);font-weight:400">(40%)</span></div><div style="font-size:10px;color:var(--muted)">100.1%</div></td><td><span class="pill p-ok">100.1%</span></td><td class="tc mono">1.00x</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:77%;background:var(--blue)"></div></div></td><td class="tr mono">$29,572,341</td><td class="tr mono" style="color:var(--hint)">$38,444,044</td></tr>
+      <tr><td><div style="font-weight:600">VTM Terceros <span style="color:var(--muted);font-weight:400">(10%)</span></div><div style="font-size:10px;color:var(--muted)">109.3%</div></td><td><span class="pill p-ok">109.3%</span></td><td class="tc mono">1.09x</td><td class="mbar"><div class="mbar-t"><div class="mbar-f" style="width:95%;background:var(--green)"></div></div></td><td class="tr mono">$8,797,772</td><td class="tr mono" style="color:var(--hint)">$9,241,357</td></tr>
+    </tbody><tfoot><tr><td colspan="4">TOTAL INGRESO MARZO 2026</td><td class="tr" style="font-size:14px;font-family:'IBM Plex Mono',monospace">$386,281,986</td><td class="tr mono" style="color:var(--hint)">$387,464,880</td></tr></tfoot></table></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Coberturas por Marca — Marzo 2026</div><div class="cov-grid">
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Coca-Cola Original</div><span class="pill p-ok">OML 114% · OMH 107%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:75%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">75%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:74%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">74%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Coca-Cola Sin Azúcar</div><span class="pill p-warn">OML 99% · OMH 86%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:80%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">80%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:64%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">64%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Sabores</div><span class="pill p-ok">OML 104% · OMH 105%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:83%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">83%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:78%;background:var(--green)"></div></div><span class="cov-pct" style="color:var(--green)">78%</span></div></div>
+      <div class="cov-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Jugos Del Valle</div><span class="pill p-warn">OML 97% · OMH 94%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:77%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">77%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:69%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">69%</span></div></div>
+      <div class="cov-item" style="border-color:var(--amber-bd);background:var(--amber-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Aguas (Brisa/Manantial)</div><span class="pill p-warn">OML 84% · OMH 87%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:66%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">66%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:65%;background:var(--amber)"></div></div><span class="cov-pct" style="color:var(--amber)">65%</span></div></div>
+      <div class="cov-item" style="border-color:var(--red-bd);background:var(--red-bg)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem"><div class="cov-name">Monster Energy</div><span class="pill p-crit">OML 59% · OMH 29%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--oml);font-weight:600">OML</span><div class="cov-track"><div class="cov-fill" style="width:47%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">47%</span></div><div class="cov-row"><span class="cov-label" style="color:var(--omh);font-weight:600">OMH</span><div class="cov-track"><div class="cov-fill" style="width:24%;background:var(--red)"></div></div><span class="cov-pct" style="color:var(--red)">24%</span></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Detalle por Ruta — Marzo 2026</div><div class="g2">
+    <div class="card"><div class="card-accent" style="background:var(--oml)"></div><div class="card-head"><div><div class="card-title">OML — Santa Rosa de Osos</div><div class="card-sub">7 rutas · 1,670 clientes · NOC 80.9%</div></div><span class="pill p-ok">107.4% vol</span></div><div class="card-pad"><table class="rt"><thead><tr><th>Ruta</th><th>Vol CF</th><th>Barra</th><th>VTM</th><th>Cob.</th><th>Juntos+</th></tr></thead><tbody><tr><td class="rt-r">ML3L50</td><td class="rt-p p-gr">118.9%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:99%"></div></div></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-neu">0%</span></td><td><span class="pill p-crit">0.0%</span></td></tr>
+<tr><td class="rt-r">ML3L51</td><td class="rt-p p-ok">99.7%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:83%"></div></div></td><td><span class="pill p-ok">110.2%</span></td><td><span class="pill p-ok">98%</span></td><td><span class="pill p-warn">55.7%</span></td></tr>
+<tr><td class="rt-r">ML3L52</td><td class="rt-p p-gr">114.8%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:96%"></div></div></td><td><span class="pill p-ok">111.6%</span></td><td><span class="pill p-ok">97%</span></td><td><span class="pill p-ok">95.8%</span></td></tr>
+<tr><td class="rt-r">ML3L53</td><td class="rt-p p-gr">110.7%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:92%"></div></div></td><td><span class="pill p-ok">101.4%</span></td><td><span class="pill p-ok">99%</span></td><td><span class="pill p-warn">63.2%</span></td></tr>
+<tr><td class="rt-r">ML3L54</td><td class="rt-p p-gr">110.5%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:92%"></div></div></td><td><span class="pill p-ok">108.7%</span></td><td><span class="pill p-ok">100%</span></td><td><span class="pill p-ok">97.7%</span></td></tr>
+<tr><td class="rt-r">ML3L55</td><td class="rt-p p-gr">104.5%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:87%"></div></div></td><td><span class="pill p-ok">102.2%</span></td><td><span class="pill p-warn">91%</span></td><td><span class="pill p-warn">51.9%</span></td></tr>
+<tr><td class="rt-r">ML3L56</td><td class="rt-p p-ok">102.3%</td><td class="bw"><div class="bt"><div class="bf f-ok" style="width:85%"></div></div></td><td><span class="pill p-ok">110.6%</span></td><td><span class="pill p-ok">100%</span></td><td><span class="pill p-crit">8.6%</span></td></tr></tbody></table><div class="sum-row"><span class="sum-l">Drop 25 CU/cli · PEM 34 vs No-PEM 20</span><span class="sum-v" style="color:var(--oml)">$0.0B VTM</span></div></div></div>
+    <div class="card"><div class="card-accent" style="background:var(--omh)"></div><div class="card-head"><div><div class="card-title">OMH — Cisneros</div><div class="card-sub">5 rutas · 1,177 clientes · NOC 79.7%</div></div><span class="pill p-ok">123.8% vol</span></div><div class="card-pad"><table class="rt"><thead><tr><th>Ruta</th><th>Vol CF</th><th>Barra</th><th>VTM</th><th>Cob.</th><th>Juntos+</th></tr></thead><tbody><tr><td class="rt-r">ML3G70</td><td class="rt-p p-cr">87.3%</td><td class="bw"><div class="bt"><div class="bf f-cr" style="width:73%"></div></div></td><td><span class="pill p-neu">—</span></td><td><span class="pill p-neu">0%</span></td><td><span class="pill p-crit">0.0%</span></td></tr>
+<tr><td class="rt-r">ML3G90</td><td class="rt-p p-gr">129.8%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:100%"></div></div></td><td><span class="pill p-ok">121.4%</span></td><td><span class="pill p-ok">100%</span></td><td><span class="pill p-ok">100.4%</span></td></tr>
+<tr><td class="rt-r">ML3G91</td><td class="rt-p p-gr">118.9%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:99%"></div></div></td><td><span class="pill p-ok">105.2%</span></td><td><span class="pill p-ok">101%</span></td><td><span class="pill p-ok">106.7%</span></td></tr>
+<tr><td class="rt-r">ML3G92</td><td class="rt-p p-gr">126.5%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:100%"></div></div></td><td><span class="pill p-ok">110.8%</span></td><td><span class="pill p-ok">112%</span></td><td><span class="pill p-ok">89.5%</span></td></tr>
+<tr><td class="rt-r">ML3G93</td><td class="rt-p p-gr">131.4%</td><td class="bw"><div class="bt"><div class="bf f-gr" style="width:100%"></div></div></td><td><span class="pill p-ok">110.6%</span></td><td><span class="pill p-ok">101%</span></td><td><span class="pill p-ok">103.7%</span></td></tr></tbody></table><div class="sum-row"><span class="sum-l">Drop 25 CU/cli · PEM 29 vs No-PEM 22</span><span class="sum-v" style="color:var(--omh)">$0.0B VTM</span></div></div></div>
+  </div></div>
+  <div class="sec"><div class="sec-label">Alertas y Destacados — Marzo 2026</div><div class="g2"><div><div class="al a-cr"><span class="ai">⚠</span><span><strong>ML3G70 — 3er mes consecutivo:</strong> Vol 87.3% · 0 visitas · 0% Juntos+. Alerta estructural confirmada. Decisión de personal/territorio urgente.</span></div><div class="al a-cr"><span class="ai">⚠</span><span><strong>ML3L56 (Santa Rosa):</strong> Vol 102.3% pero NOC 0.0% y Juntos+ 8.6%. Sin visitas registradas. Ruta opera sin control de ejecución.</span></div><div class="al a-wn"><span class="ai">◉</span><span><strong>Monster persiste crítico:</strong> OMH: 24% cobertura real (5 de 17 objetivo). Tercer mes bajo 30%. Requiere plan de activación específico.</span></div><div class="al a-wn"><span class="ai">◉</span><span><strong>Juntos+ OML en caída:</strong> 57.9% cumplimiento. ML3L50 (0%) y ML3L56 (8.6%) arrastran el indicador.</span></div></div><div><div class="al a-ok"><span class="ai">★</span><span><strong>OMH — Mes histórico:</strong> 30,238 CU = 123.8%. ML3G93 (131.4%) y ML3G92 (126.5%) lideran. Recuperación total de ML3G92.</span></div><div class="al a-ok"><span class="ai">★</span><span><strong>OML — Todas las rutas sobre 99%:</strong> Primera vez en el año sin ruta bajo 100% (excluyendo ML3L50/56 sin datos de cobertura).</span></div><div class="al a-bl"><span class="ai">ℹ</span><span><strong>Coberturas en tramo 1.00x:</strong> Si en abril se llega a 105%, el pago sube de $29.6M a $34.0M (+$4.4M). Alta palanca.</span></div><div class="al a-bl"><span class="ai">ℹ</span><span><strong>Juntos+ OMH recuperado:</strong> 99.7% de objetivo — recuperación desde 51.1% en Febrero. ML3G90, ML3G91 y ML3G93 sobre 100%.</span></div></div></div></div>
+  <div class="sec"><div class="sec-label">Análisis Profundo — Marzo 2026</div>
+    <div class="g2">
+      <div class="card"><div class="card-accent" style="background:var(--blue)"></div><div class="card-head"><div class="card-title">Refrigeración y Activo Frío</div><div class="card-sub">Neveras · PEM · Cobertura Frío GEC</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Neveras instaladas</td><td class="tr mono">748</td><td class="tr mono">682</td></tr>
+        <tr><td>Clientes PEM activos</td><td class="tr mono">677</td><td class="tr mono">583</td></tr>
+        <tr><td>% Cobertura frío total</td><td class="tr mono">38%</td><td class="tr mono">47%</td></tr>
+        <tr><td>Neveras improductivas</td><td class="tr mono" style="color:var(--red)">341</td><td class="tr mono" style="color:var(--red)">304</td></tr>
+        <tr><td>Neveras productivas (imp&gt;80%)</td><td class="tr mono" style="color:var(--green)">71</td><td class="tr mono" style="color:var(--green)">115</td></tr>
+        <tr><td>Potencial nuevas neveras</td><td class="tr mono" style="color:var(--blue)">248</td><td class="tr mono" style="color:var(--blue)">196</td></tr>
+        <tr><td>🥇 Frío Oro</td><td class="tr mono">64%</td><td class="tr mono">64%</td></tr>
+        <tr><td>🥈 Frío Plata</td><td class="tr mono">56%</td><td class="tr mono">60%</td></tr>
+        <tr><td>🥉 Frío Bronce</td><td class="tr mono">29%</td><td class="tr mono">40%</td></tr>
+      </tbody></table></div></div>
+      <div class="card"><div class="card-accent" style="background:var(--amber)"></div><div class="card-head"><div class="card-title">Coberturas GEC + Mix Categorías</div><div class="card-sub">Oro · Plata · Bronce · Carbonatos · Aguas</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>🥇 GEC Oro</td><td class="tr mono">70%</td><td class="tr mono">69%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">819/569</td><td class="tr mono" style="font-size:10px">597/411</td></tr>
+        <tr><td>🥈 GEC Plata</td><td class="tr mono">69%</td><td class="tr mono">66%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">4,651/3,194</td><td class="tr mono" style="font-size:10px">3,654/2,401</td></tr>
+        <tr><td>🥉 GEC Bronce</td><td class="tr mono">79%</td><td class="tr mono">76%</td></tr>
+        <tr><td style="font-size:10px;color:var(--muted)">Pot/Compl</td><td class="tr mono" style="font-size:10px">6,036/4,760</td><td class="tr mono" style="font-size:10px">4,150/3,141</td></tr>
+        <tr><td>🔴 Carbonatos</td><td class="tr mono">73.8%</td><td class="tr mono">70.2%</td></tr>
+        <tr><td>💧 Aguas</td><td class="tr mono">15.1%</td><td class="tr mono">21.1%</td></tr>
+        <tr><td>🍊 Jugos</td><td class="tr mono">8.1%</td><td class="tr mono">6.1%</td></tr>
+        <tr><td>⚡ Energizantes</td><td class="tr mono">1.9%</td><td class="tr mono">1.7%</td></tr>
+      </tbody></table></div></div>
+    </div>
+    <div class="g2" style="margin-top:14px">
+      <div class="card"><div class="card-accent" style="background:var(--purple)"></div><div class="card-head"><div class="card-title">Fidelización Juntos+</div><div class="card-sub">Cumplimiento · Cobertura real · Rutas</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Base elegibles</td><td class="tr mono">1,783</td><td class="tr mono">1,228</td></tr>
+        <tr><td>Objetivo</td><td class="tr mono">1,181</td><td class="tr mono">951</td></tr>
+        <tr><td>Clientes activos</td><td class="tr mono">790</td><td class="tr mono">948</td></tr>
+        <tr><td>% Cumpl. vs objetivo</td><td class="tr mono" style="color:var(--amber);font-weight:700">67.0%</td><td class="tr mono" style="color:var(--green);font-weight:700">99.7%</td></tr>
+        <tr><td>% Cobertura real/base</td><td class="tr mono">38.4%</td><td class="tr mono">43.3%</td></tr>
+        <tr><td>Mejor ruta</td><td class="tr" style="font-size:10px;color:var(--green)">ML3L54 — 89.4%</td><td class="tr" style="font-size:10px;color:var(--green)">ML3G92 — 52.1%</td></tr>
+        <tr><td>Peor ruta</td><td class="tr" style="font-size:10px;color:var(--red)">ML3L56 — 8.6%</td><td class="tr" style="font-size:10px;color:var(--red)">ML3G70 — 0.0%</td></tr>
+      </tbody></table></div></div>
+      <div class="card"><div class="card-accent" style="background:var(--green)"></div><div class="card-head"><div class="card-title">Mix Presentación y MPCKS</div><div class="card-sub">Tamaños · Multiempaques por minimercado</div></div><div class="card-pad"><table class="rt"><thead><tr><th>Presentación</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Personal</td><td class="tr mono">52.3%</td><td class="tr mono">57.8%</td></tr>
+        <tr><td>Familiar</td><td class="tr mono">20.2%</td><td class="tr mono">18.8%</td></tr>
+        <tr><td>Minipersonal</td><td class="tr mono">15.5%</td><td class="tr mono">11.9%</td></tr>
+        <tr><td>MegaFamiliar</td><td class="tr mono">12.0%</td><td class="tr mono">11.5%</td></tr>
+      </tbody></table>
+      <div style="margin-top:10px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">MPCKS — Minimercados</div>
+      <table class="rt"><thead><tr><th>Indicador</th><th class="tr" style="color:var(--oml)">OML</th><th class="tr" style="color:var(--omh)">OMH</th></tr></thead><tbody>
+        <tr><td>Minimercados en jefatura</td><td class="tr mono">163</td><td class="tr mono">84</td></tr>
+        <tr><td>Venta MPCKS (CU)</td><td class="tr mono">619</td><td class="tr mono">245</td></tr>
+        <tr><td>Promedio MPCKS/minimercado</td><td class="tr mono" style="font-weight:700">3.8</td><td class="tr mono" style="font-weight:700">2.9</td></tr>
+        <tr><td>Mejor ruta</td><td class="tr" style="font-size:10px;color:var(--green)">ML3L52 — 6.3</td><td class="tr" style="font-size:10px;color:var(--green)">ML3G93 — 5.8</td></tr>
+      </tbody></table></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ACUMULADO Q1 ═══ -->
+<div class="tab-panel" id="tab-acu">
+  <div class="sec"><div class="sec-label">Ingreso KOF Acumulado — Q1 2026 (Ene + Feb + Mar)</div>
+    <div class="card">
+      <div class="taps-top">
+        <div>
+          <div class="taps-lbl">Ingreso total acumulado KOF · Q1 2026 (3 meses)</div>
+          <div class="taps-amount">$1,117,148,957</div>
+          <div class="taps-sub">COP · 3 meses</div>
+          <div class="tdelta td-pos">▲ 99.6% del presupuesto acumulado Q1</div>
+        </div>
+        <div class="taps-meta">
+          <div class="taps-meta-row"><div class="taps-lbl">Budget Q1 (3 meses)</div><div class="taps-meta-val">$1,121,806,602</div></div>
+          <div class="taps-meta-row"><div class="taps-lbl">Gap vs budget Q1</div><div class="taps-meta-val" style="color:#fca5a5">-$4,657,645</div></div>
+          <div class="taps-meta-row"><div class="taps-lbl">Proyección anual</div><div class="taps-meta-val">$4,469M COP</div></div>
+        </div>
+      </div>
+      <div class="taps-body" style="padding:1rem 1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;font-size:11px;font-weight:600">
+          <span>Avance presupuesto anual 2026</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:var(--muted)">3 / 12 meses</span>
+        </div>
+        <div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border)">
+          <div style="height:100%;background:var(--text);border-radius:4px;width:25%"></div>
+        </div>
+        <div class="months"><span>Ene ✓</span><span>Feb ✓</span><span>Mar ✓</span><span>Abr</span><span>May</span><span>Jun</span><span>Jul</span><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dic</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-label">KPIs Acumulados — Promedio Q1 2026</div><div class="g6">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Vol CF Prom.</div><div class="kv">104.4%</div><div class="ks">Ene 100% · Feb 92.1% · Mar 113.7%</div><div class="kd"><span class="d du">↑ Recuperación Mar</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">VTM Prom.</div><div class="kv">109.7%</div><div class="ks">Ene 117% · Feb 100.3% · Mar 109.3%</div><div class="kd"><span class="d du">Consistente ≥100%</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kl">Coberturas Prom.</div><div class="kv">103.5%</div><div class="ks">Ene 96% · Feb 114.4% · Mar 100.1%</div><div class="kd"><span class="d dn">Oscilante</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kl">Juntos+ OMH</div><div class="kv">78.2%</div><div class="ks">Ene 75.4% · Feb 59.2% · Mar 99.7%</div><div class="kd"><span class="d du">↑ Recuperación total</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">Drop Size Prom.</div><div class="kv">~22.7</div><div class="ks">Ene ~22.3 · Feb 20.4 · Mar ~25.5</div><div class="kd"><span class="d du">Tendencia ↑</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--text)"></div><div class="kl">TAPS/mes Prom.</div><div class="kv sm">$372.4M</div><div class="ks">Promedio mensual Q1</div><div class="kd"><span class="d dn">vs budget $373.9M</span></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sec-label">Tabla Comparativa — Q1 2026: Ene vs Feb vs Mar</div>
+    <div class="card"><table class="ctab">
+      <thead><tr><th>Indicador</th><th>Enero 2026</th><th>Febrero 2026</th><th>Marzo 2026</th><th>Tendencia Q1</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">Volumen CF Total</td><td class="mono">~61,300 CU · 100%</td><td class="mono">56,023 CU · 92.1%</td><td class="mono">72,657 CU · 113.7%</td><td><span class="pill p-ok">↑ Mejor en Mar</span></td></tr>
+        <tr><td style="font-weight:600">VTM Terceros</td><td class="mono">$53.9B · 117%</td><td class="mono">$46.1B · 100.3%</td><td class="mono">$50.1B · 109.3%</td><td><span class="pill p-ok">Consistente &gt;100%</span></td></tr>
+        <tr><td style="font-weight:600">Coberturas</td><td class="mono">96%</td><td class="mono">114.4%</td><td class="mono">100.1%</td><td><span class="pill p-warn">Oscilante</span></td></tr>
+        <tr><td style="font-weight:600">Juntos+ OML</td><td class="mono">63.5%</td><td class="mono">45.3%</td><td class="mono">67.0%</td><td><span class="pill p-warn">Oscilante — bajo</span></td></tr>
+        <tr><td style="font-weight:600">Juntos+ OMH</td><td class="mono">75.4%</td><td class="mono">59.2%</td><td class="mono">99.7%</td><td><span class="pill p-ok">↑ Recuperación total</span></td></tr>
+        <tr><td style="font-weight:600">Penet. VTM OML</td><td class="mono">30.4%</td><td class="mono">33.5%</td><td class="mono" style="color:var(--green);font-weight:600">41.5%</td><td><span class="pill p-ok">↑ +11pp Q1</span></td></tr>
+        <tr><td style="font-weight:600">Penet. VTM OMH</td><td class="mono">24.1%</td><td class="mono">21.2%</td><td class="mono">25.9%</td><td><span class="pill p-warn">↑ leve +1.8pp</span></td></tr>
+        <tr><td style="font-weight:600">Monster OML cob. real</td><td class="mono" style="color:var(--red)">18%</td><td class="mono" style="color:var(--red)">40%</td><td class="mono" style="color:var(--red)">47%</td><td><span class="pill p-warn">↑ pero crítico</span></td></tr>
+        <tr><td style="font-weight:600">Monster OMH cob. real</td><td class="mono" style="color:var(--red)">6%</td><td class="mono" style="color:var(--red)">12%</td><td class="mono" style="color:var(--red)">24%</td><td><span class="pill p-warn">↑ muy bajo aún</span></td></tr>
+        <tr><td style="font-weight:600">Drop PEM OML</td><td class="mono">32 CU</td><td class="mono">27 CU</td><td class="mono" style="color:var(--green);font-weight:600">34 CU</td><td><span class="pill p-ok">↑ Máximo Q1</span></td></tr>
+        <tr><td style="font-weight:600">Drop PEM OMH</td><td class="mono">28 CU</td><td class="mono">25 CU</td><td class="mono">29 CU</td><td><span class="pill p-ok">↑ Recuperado</span></td></tr>
+        <tr style="background:var(--surface)"><td style="font-weight:700">Ingreso TAPS (COP)</td><td class="mono" style="font-weight:600">$368,058,031</td><td class="mono" style="font-weight:600">$362,808,940</td><td class="mono" style="font-weight:600;color:var(--green)">$386,281,986</td><td><span class="pill p-ok">↑ Mejor del Q1</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="sec"><div class="sec-label">Gráficos Q1 2026</div>
+    <div class="g2">
+      <div class="card"><div class="card-head"><div class="card-title">KPIs — Q1 2026 (Ene · Feb · Mar)</div></div>
+        <div class="card-pad"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:11px">
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(184,80,16,0.75)"></span>Enero</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(26,70,160,0.75)"></span>Febrero</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(26,112,72,0.75)"></span>Marzo</span>
+        </div>
+        <div class="ch" style="height:240px"><canvas id="ch-kpi"></canvas></div></div>
+      </div>
+      <div class="card"><div class="card-head"><div class="card-title">Ingreso TAPS por componente (M COP)</div></div>
+        <div class="card-pad"><div class="ch" style="height:268px"><canvas id="ch-taps-stack"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-label">Proyección 2026 al Ritmo Q1</div><div class="g3">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--text)"></div><div class="kl">Proyección Ingreso Anual</div><div class="kv sm">$4,469M COP</div><div class="ks">A ritmo de $372.4M/mes promedio Q1</div><div class="kd"><span class="d dn">Budget: $4,487M (-0.4%)</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kl">Gap anual estimado</div><div class="kv sm" style="color:var(--amber)">-$18M COP</div><div class="ks">Reducido vs estimación Feb (-$102M)</div><div class="kd"><span class="d du">Marzo mejoró proyección</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Palanca coberturas ≥105%</div><div class="kv sm" style="color:var(--green)">+$4.4M/mes</div><div class="ks">De tramo 1.00x → 1.05x en tabla TAPS</div><div class="kd"><span class="d du">Acción más accesible</span></div></div>
+  </div></div>
+</div>
+
+<!-- ═══ HISTÓRICO ═══ -->
+<div class="tab-panel" id="tab-hist">
+  <div class="sec"><div class="sec-label">Crecimiento Histórico 2023–2026</div><div class="g4">
+    <div class="kpi"><div class="kpi-bar" style="background:#888"></div><div class="kl">Ventas CF 2023</div><div class="kv sm">$18.5B</div><div class="ks">COP · Ventas anuales CF</div><div class="kd"><span class="d dn">Base histórica</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kl">Ventas CF 2024</div><div class="kv sm">$20.5B</div><div class="ks">COP · Ventas anuales CF</div><div class="kd"><span class="d du">+10.8% vs 2023</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kl">Ventas CF 2025</div><div class="kv sm">$21.2B</div><div class="ks">COP · Ventas anuales CF</div><div class="kd"><span class="d du">+3.4% vs 2024</span></div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kl">2026 Q1 Acum.</div><div class="kv sm">$150.1B</div><div class="ks">Ene $53.9B + Feb $46.1B + Mar $50.1B</div><div class="kd"><span class="d dn">3 meses</span></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sec-label">Tabla Histórica de Indicadores</div><div class="card"><table class="ctab">
+    <thead><tr><th>Indicador</th><th>2023</th><th>2024</th><th>2025</th><th>Ene 2026</th><th>Feb 2026</th><th>Mar 2026</th><th>Q1 2026</th></tr></thead>
+    <tbody>
+      <tr><td style="font-weight:600">Ventas CF (anual/período)</td><td class="mono">$18.5B</td><td class="mono">$20.5B</td><td class="mono">$21.2B</td><td class="mono">$53.9B</td><td class="mono">$46.1B</td><td class="mono">$50.1B</td><td class="mono">$150.1B</td></tr>
+      <tr><td style="font-weight:600">Crecimiento YoY</td><td class="mono" style="color:var(--muted)">—</td><td class="mono"><span class="pill p-ok">+10.8%</span></td><td class="mono"><span class="pill p-ok">+3.4%</span></td><td class="mono" style="color:var(--muted)">—</td><td class="mono"><span class="pill p-crit">▼3.5% vs PY</span></td><td class="mono" style="color:var(--muted)">—</td><td class="mono" style="color:var(--muted)">—</td></tr>
+      <tr><td style="font-weight:600">Volumen CF (CU)</td><td class="mono" style="color:var(--muted)">s/d</td><td class="mono" style="color:var(--muted)">s/d</td><td class="mono">Feb-25: 58,030</td><td class="mono">~61,300</td><td class="mono">56,023</td><td class="mono">72,657</td><td class="mono">~190,000</td></tr>
+      <tr><td style="font-weight:600">Drop Size (CU/cliente)</td><td class="mono" style="color:var(--muted)">s/d</td><td class="mono" style="color:var(--muted)">s/d</td><td class="mono">Feb-25: ~20.0</td><td class="mono">~22.3</td><td class="mono">20.4</td><td class="mono">~25.5</td><td class="mono">Prom: ~22.7</td></tr>
+      <tr><td style="font-weight:600">Ingreso TAPS (COP)</td><td class="mono" style="color:var(--muted)">s/d</td><td class="mono" style="color:var(--muted)">s/d</td><td class="mono" style="color:var(--muted)">Modelo anterior</td><td class="mono">$368,058,031</td><td class="mono">$362,808,940</td><td class="mono" style="color:var(--green);font-weight:600">$386,281,986</td><td class="mono">$1,117,148,957</td></tr>
+    </tbody>
+  </table></div></div>
+
+  <div class="sec"><div class="sec-label">Gráficos de Tendencia</div>
+    <div class="g2">
+      <div class="card"><div class="card-head"><div class="card-title">Volumen mensual en CU — Comparativo</div></div>
+        <div class="card-pad"><div class="ch" style="height:240px"><canvas id="ch-hist-vol"></canvas></div></div>
+      </div>
+      <div class="card"><div class="card-head"><div class="card-title">Drop Size (CU/cliente) — Tendencia</div></div>
+        <div class="card-pad"><div class="ch" style="height:240px"><canvas id="ch-hist-drop"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span>MMC Colombia SAS · KOF FEMSA · Distribución Norte Antioquia · 3,018 clientes base · 12 rutas</span>
+  <span>Datos: Cierre Oficial Mar 2026 · Sumar+ Soluciones · Modelo TAPS KOF 2026 · v7.0</span>
+</footer>
+
+<script>
+Chart.defaults.font.family = 'Inter, sans-serif';
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#68685e';
+const COLORS={oml:'rgba(184,80,16,0.8)',omh:'rgba(26,70,160,0.8)',green:'rgba(26,112,72,0.8)',amber:'rgba(154,98,0,0.8)',red:'rgba(184,48,48,0.8)',blue:'rgba(26,70,160,0.8)',fijo:'rgba(26,26,24,0.12)'};
+const gridCfg={color:'rgba(0,0,0,0.05)'};
+
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(function(t,i){
+    t.classList.toggle('active',['ene','feb','mar','acu','hist'][i]===id);
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.toggle('active',p.id==='tab-'+id);
+  });
+  if(id==='acu'&&!window._acuDone){setTimeout(drawAcu,50);window._acuDone=true;}
+  if(id==='hist'&&!window._histDone){setTimeout(drawHist,50);window._histDone=true;}
+}
+
+function drawAcu(){
+  new Chart(document.getElementById('ch-kpi'),{
+    type:'bar',
+    data:{
+      labels:['Vol CF','VTM','Coberturas','Drop Size'],
+      datasets:[
+        {label:'Enero',data:[100,117,96,22.3],backgroundColor:COLORS.oml,borderRadius:3,borderSkipped:false},
+        {label:'Febrero',data:[92.1,100.3,114.4,20.4],backgroundColor:COLORS.omh,borderRadius:3,borderSkipped:false},
+        {label:'Marzo',data:[113.7,109.3,100.1,25.5],backgroundColor:COLORS.green,borderRadius:3,borderSkipped:false},
+        {label:'Budget',type:'line',data:[100,100,100,21],borderColor:'#1a1a18',borderWidth:1.5,borderDash:[4,3],pointRadius:0,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8,usePointStyle:true}},tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+c.parsed.y.toFixed(1);}}}},
+      scales:{x:{grid:{display:false}},y:{min:40,max:130,grid:gridCfg}}}
+  });
+  new Chart(document.getElementById('ch-taps-stack'),{
+    type:'bar',
+    data:{
+      labels:['Enero 2026','Febrero 2026','Marzo 2026'],
+      datasets:[
+        {label:'Fijo',data:[302.4,302.4,302.4],backgroundColor:COLORS.fijo,borderSkipped:false,borderRadius:0},
+        {label:'Volumen',data:[35.7,14.8,45.5],backgroundColor:COLORS.amber,borderSkipped:false,borderRadius:0},
+        {label:'Coberturas',data:[20.7,38.4,29.6],backgroundColor:COLORS.green,borderSkipped:false,borderRadius:0},
+        {label:'VTM',data:[9.2,7.1,8.8],backgroundColor:COLORS.blue,borderSkipped:false,borderRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8,usePointStyle:true,pointStyle:'rect'}},
+        tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': $'+c.parsed.y.toFixed(1)+'M';}}}},
+      scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return '$'+v+'M';}},grid:gridCfg}}}
+  });
+}
+
+function drawHist(){
+  new Chart(document.getElementById('ch-hist-vol'),{
+    type:'bar',
+    data:{
+      labels:['Feb 2025','Ene 2026','Feb 2026','Mar 2026'],
+      datasets:[
+        {label:'OML',data:[34360,34822,33423,42419],backgroundColor:COLORS.oml,borderRadius:4,borderSkipped:false},
+        {label:'OMH',data:[23670,26477,22600,30238],backgroundColor:COLORS.omh,borderRadius:4,borderSkipped:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8,usePointStyle:true,pointStyle:'rect'}},
+        tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString()+' CU';}}}},
+      scales:{x:{grid:{display:false}},y:{ticks:{callback:function(v){return (v/1000).toFixed(0)+'k';}},grid:gridCfg}}}
+  });
+  new Chart(document.getElementById('ch-hist-drop'),{
+    type:'line',
+    data:{
+      labels:['Feb 2025','Ene 2026','Feb 2026','Mar 2026'],
+      datasets:[
+        {label:'OML',data:[20.2,20.5,20.0,25.0],borderColor:COLORS.oml,backgroundColor:'rgba(184,80,16,0.08)',borderWidth:2,pointRadius:5,pointBackgroundColor:COLORS.oml,fill:true,tension:0.3},
+        {label:'OMH',data:[19.7,24.1,21.1,25.0],borderColor:COLORS.omh,backgroundColor:'rgba(26,70,160,0.08)',borderWidth:2,pointRadius:5,pointBackgroundColor:COLORS.omh,fill:true,tension:0.3},
+        {label:'Total',data:[20.0,22.3,20.4,25.5],borderColor:'#1a1a18',borderWidth:2,pointRadius:4,fill:false,tension:0.3,borderDash:[4,3]}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8,usePointStyle:true}}},
+      scales:{x:{grid:{display:false}},y:{min:17,max:28,ticks:{callback:function(v){return v+' CU';}},grid:gridCfg}}}
+  });
+}
+</script>
+</body>
+</html>
